@@ -3,7 +3,7 @@ class Sensor{
 	
 	function __construct(){
 		date_default_timezone_set("Asia/Jakarta");
-		$this->connection = mysqli_connect("localhost","root","laurens23");
+		$this->connection = mysqli_connect("localhost","root","");
 		mysqli_select_db($this->connection,"db_sensor");
 	}
 	
