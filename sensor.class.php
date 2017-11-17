@@ -3,7 +3,7 @@ class Sensor{
 	
 	function __construct(){
 		date_default_timezone_set("Asia/Jakarta");
-		$this->connection = mysqli_connect("localhost","root","");
+		$this->connection = mysqli_connect("localhost","root","laurens23");
 		mysqli_select_db($this->connection,"db_sensor");
 	}
 	
@@ -16,18 +16,6 @@ class Sensor{
 			echo "#Error^";
 		}	
 	}
-	
-	// function ambil_semua_data_asc(){
-	// 	$query = "select * from t_suhu order by id asc";
-	// 	$hasil = mysqli_query($this->connection,$query) or die(mysqli_error());
-	// 	return mysqli_fetch_object($hasil);
-	// }
-	
-	// function ambil_semua_data_desc(){
-	// 	$query = "select * from t_suhu order by id desc";
-	// 	$hasil = mysqli_query($this->connection,$query) or die(mysqli_error());
-	// 	return mysqli_fetch_object($hasil);
-	// }
 	
 	function ambil_data_terakhir(){
 		$query = "select * from t_suhu order by id desc limit 1";

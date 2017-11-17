@@ -9,10 +9,11 @@ if($_GET["mode"]=="recent"){
 	);
 	echo json_encode($data,JSON_PRETTY_PRINT);
 }else
-if($_GET["mode"]=="tabel"){
+if($_GET["mode"]=="tabel" || $_GET["mode"]=="grafik"){
 	$data = array(
 		"data_hari_ini" => $sensor->data_hari_ini()
 	);
 	echo json_encode($data,JSON_PRETTY_PRINT);
 }
+
 ?>

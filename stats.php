@@ -65,48 +65,83 @@
 	<script type="text/javascript" src="./js/highcharts.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.js"></script>
 	<script>
-		var chart = new Highcharts.Chart({
-		    chart: {
-		    	renderTo: 'container1'
-		    },
-			title: {
-		    	text: 'Grafik Data Suhu Harian (<?php echo date("F"); ?>)'
-		    },
-			xAxis: {
-		    	title: {
-					enabled: true,
-					text: 'Tanggal'
-		    	},
-				categories: ["1","2","1","2"]
-			},
-		    series: [{
-		    	data: [20,30,30,40]
-		    }]
-		});
-	</script>
-	<script>
-		var chart = new Highcharts.Chart({
-		      chart: {
-		         renderTo: 'container2'
-		      },
-			  title: {
-		            text: 'Grafik Data Kelembaban Harian (<?php echo date("F"); ?>)'
-		        },
-				
-			  xAxis: {
-		    title: {
-		        enabled: true,
-		        text: 'Hours of the Day'
-		    },
-		    type: 'datetime',
+	$(document).ready(function(){
+		function load_data(){
+			var tabel = '';
+			$.ajax({
+				url : 'loader.php?mode=tabel' ,
+				type : 'GET',
+				dataType : 'json',
+				success : function(response){
+					// console.log(response);
+					if(response.data_hari_ini.length > 0 ){
+						var array_suhu = new Array();
+						var array_kelembaban = new Array();
+						var data_ke = new Array();
+						var ctr = 0;
+						var urutan_data;
+						urutan_data = 1;
+						for(var c=response.data_hari_ini.length - 1;c >= 0;c--){
+							data_ke[ctr] = urutan_data;
+							array_suhu[ctr] = parseInt(response.data_hari_ini[c].suhu);
+							array_kelembaban[ctr] = parseInt(response.data_hari_ini[c].rh);
+							ctr++;
+							urutan_data ++;
+						}
+						buat_grafik(array_suhu,array_kelembaban,urutan_data);
+						
+					}
+				},
+				error : function(response){
+					console.log(response);
+					
+				},
+			});
+		}
+		setInterval(function(){load_data();},5000);
 
-		    dateTimeLabelFormats : {
-		        hour: '%I %p',
-		        minute: '%I:%M %p'
-		    }
-		},
-		      series: [{
-		         data: [15]
-		      }]
-		});
+		function buat_grafik(suhu,kelembaban,urutan_data){
+			var chart = new Highcharts.Chart({
+				chart: {
+					renderTo: 'container1'
+				},
+				title: {
+					text: 'Grafik Data Suhu Harian (<?php echo date("F"); ?>)'
+				},
+				xAxis: {
+					title: {
+						enabled: true,
+						text: 'Pengukuran ke - x'
+					},
+					categories: urutan_data
+				},
+				series: [{
+					name: 'Suhu',
+					data: suhu
+				}]
+			});
+
+			var chart2 = new Highcharts.Chart({
+				chart: {
+					renderTo: 'container2'
+				},
+				title: {
+					text: 'Grafik Data Kelembaban Harian (<?php echo date("F"); ?>)'
+				},
+				xAxis: {
+					title: {
+						enabled: true,
+						text: 'Pengukuran ke - x'
+					},
+					categories: urutan_data
+				},
+				series: [{
+					name: 'Kelembaban',
+					color: '#00FF00',
+					data: kelembaban
+				}]
+			});
+		}
+
+	});
 	</script>
